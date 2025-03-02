@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-image: url("gallery-card-02.jpg");
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        background-attachment: fixed; /* 可选固定效果 */
+      }
+      .container {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px); /* 毛玻璃效果 */
+      }
+
+      .input-group {
+        display: flex;
+        gap: 10px;
+      }
+
+      input {
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        width: 250px;
+        font-size: 1rem;
+      }
+
+      button {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 5px;
+        background: #4caf50;
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      button.delete {
+        background: #f44336;
+      }
+
+      #savedContent {
+        margin-top: 1rem;
+        color: #666;
+        max-width: 350px;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+
+  <body style="display: flex; justify-content: center; align-items: center">
+    <div class="container">
+      <div class="input-group">
+        <input type="text" id="inputField" placeholder="输入内容..." />
+        <button id="actionBtn">保存</button>
+      </div>
+      <div id="savedContent"></div>
+    </div>
+  </body>
+  <script>
+    // 获取DOM元素
+    const inputField = document.getElementById("inputField");
+    const actionBtn = document.getElementById("actionBtn");
+    const savedContent = document.getElementById("savedContent");
+
+    // 检查本地存储
+    const storedValue = localStorage.getItem("userInput");
+    if (storedValue) {
+      savedContent.textContent = `已保存内容：${storedValue}`;
+      actionBtn.classList.add("delete");
+      actionBtn.textContent = "删除";
+    }
+
+    // 按钮点击处理
+    actionBtn.addEventListener("click", () => {
+      if (actionBtn.classList.contains("delete")) {
+        // 删除操作
+        localStorage.removeItem("userInput");
+        savedContent.textContent = "";
+        inputField.value = "";
+        actionBtn.classList.remove("delete");
+        actionBtn.textContent = "保存";
+      } else {
+        // 保存操作
+        const inputValue = inputField.value.trim();
+        if (inputValue) {
+          localStorage.setItem("userInput", inputValue);
+          savedContent.textContent = `已保存内容：${inputValue}`;
+          actionBtn.classList.add("delete");
+          actionBtn.textContent = "删除";
+        } else {
+          alert("请输入有效内容");
+        }
+      }
+    });
+
+    // 回车键支持
+    inputField.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        actionBtn.click();
+      }
+    });
+  </script>
+</html>
